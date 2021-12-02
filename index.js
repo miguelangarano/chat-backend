@@ -3,6 +3,7 @@ const app = express()
 const cors = require("cors")
 require("dotenv").config()
 const userRouter = require("./src/routers/user")
+const chatRouter = require("./src/routers/chat")
 const mongoose = require("mongoose")
 mongoose.connect(process.env.MONGOURL)
 
@@ -15,6 +16,7 @@ app.use((req, res, next) => {
 app.use(cors())
 
 app.use(userRouter)
+app.use(chatRouter)
 
 
 app.listen(port, () => {

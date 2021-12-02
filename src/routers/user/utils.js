@@ -60,4 +60,74 @@ async function loginUser(email, password) {
     return { email, nickname: user.nickname, token }
 }
 
-module.exports = { registerUser, loginUser }
+async function updateUser(email, imageUrl, password, newPassword) {
+    if (imageUrl != null || newPassword != null) {
+        const user = await User.findOne({ email }).catch((error) => {
+            console.log(error)
+            throw new Error(`Error encontrando usuario ${error}`)
+        })
+        if (user == null) {
+            throw new Error(`Error usuario no encontrado`)
+        }
+        if (newPassword != null) {
+            const passwordMatch = await verifyHashedPassword(
+                password,
+                user.password
+            )
+            if (passwordMatch === false) {
+                throw new Error(`Error contraseña incorrecta`)
+            }
+            const hashedPassword = await hashPassword(newPassword).catch((error) => {
+                console.log(error)
+                throw new Error(`Error hasheando la nueva contraseña. ${error}`)
+            })
+            user.password = hashedPassword
+        }
+        if (imageUrl != null) {
+            user.imageUrl = imageUrl
+        }
+        user.save()
+    } else {
+        throw new Error("Error no se enviaron cambios")
+    }
+    return { imageUrl }
+}
+
+async function deleteUser(email, password) {
+    const user = await User.findOne({ email }).catch((error) => {
+        console.log(error)
+        throw new Error(`Error encontrando usuario ${error}`)
+    })
+    if (user == null) {
+        throw new Error(`Error usuario no encontrado`)
+    }
+    const passwordMatch = await verifyHashedPassword(
+        password,
+        user.password
+    )
+    if (passwordMatch === false) {
+        throw new Error(`Error contraseña incorrecta`)
+    }
+    user.remove().catch((error) => {
+        throw new Error(`Error no se pudo eliminar`)
+    })
+    return
+}
+
+async function queryUser(nickname) {
+    const user = await User.findOne({ nickname }).catch((error) => {
+        console.log(error)
+        throw new Error(`Error encontrando usuario ${error}`)
+    })
+    if (user == null) {
+        throw new Error(`Error usuario no encontrado`)
+    }
+    const returnedUser = {
+        email: user.email,
+        nickname: user.nickname,
+        imageUrl: user.imageUrl
+    }
+    return returnedUser
+}
+
+module.exports = { registerUser, loginUser, updateUser, deleteUser, queryUser }

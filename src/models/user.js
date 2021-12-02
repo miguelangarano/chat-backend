@@ -14,8 +14,7 @@ const userSchema = new mongoose.Schema({
         maxlength: 15
     },
     imageUrl: {
-        type: String,
-        match: RegExp(/\.(gif|jpe?g|tiff?|png|webp|bmp)$/i)
+        type: String
     },
     password: {
         type: String,
