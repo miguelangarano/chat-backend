@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 const chatSchema = new mongoose.Schema({
     name: {
         type: String,
+        unique: true,
         required: true,
     },
     adminNickname: {
@@ -14,13 +15,11 @@ const chatSchema = new mongoose.Schema({
             email: {
                 type: String,
                 required: true,
-                unique: true,
                 match: RegExp(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
             },
             nickname: {
                 type: String,
                 required: true,
-                unique: true,
                 maxlength: 15
             },
             imageUrl: {
@@ -38,13 +37,11 @@ const chatSchema = new mongoose.Schema({
                 email: {
                     type: String,
                     required: true,
-                    unique: true,
                     match: RegExp(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
                 },
                 nickname: {
                     type: String,
                     required: true,
-                    unique: true,
                     maxlength: 15
                 },
                 imageUrl: {
