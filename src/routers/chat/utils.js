@@ -3,7 +3,7 @@ const { v4 } = require('uuid')
 const moment = require("moment")
 
 async function createGroup(name, adminNickname, adminUser, initialMessage) {
-    const newChat = {
+    const chat = await Chat.create({
         name,
         adminNickname,
         users: [
@@ -17,9 +17,7 @@ async function createGroup(name, adminNickname, adminUser, initialMessage) {
                 body: initialMessage
             }
         ]
-    }
-    console.log("@@@@@@@", newChat)
-    const chat = await Chat.create(newChat).catch((error) => {
+    }).catch((error) => {
         console.log(error)
         throw new Error("Error al crear chat")
     })
