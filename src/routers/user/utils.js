@@ -130,4 +130,29 @@ async function queryUser(nickname) {
     return returnedUser
 }
 
-module.exports = { registerUser, loginUser, updateUser, deleteUser, queryUser }
+async function queryCompleteUser(nickname) {
+    const user = await User.findOne({ nickname }).catch((error) => {
+        console.log(error)
+        throw new Error(`Error encontrando usuario ${error}`)
+    })
+    if (user == null) {
+        throw new Error(`Error usuario no encontrado`)
+    }
+    const returnedUser = {
+        email: user.email,
+        nickname: user.nickname,
+        imageUrl: user.imageUrl,
+        password: user.password
+    }
+    return returnedUser
+}
+
+module.exports = {
+    registerUser,
+    loginUser,
+    updateUser,
+    deleteUser,
+    queryUser,
+    queryCompleteUser,
+    verifyHashedPassword
+}
