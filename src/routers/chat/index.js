@@ -6,7 +6,8 @@ const {
     addGroupMember,
     deleteGroup,
     queryChatGroup,
-    queryChatGroups
+    queryChatGroups,
+    queryChatGroupsByNickname
 } = require("./utils")
 
 //Crear grupo
@@ -115,6 +116,30 @@ router.get("/chat/:chatName", authenticate, async (req, res) => {
         res.status(200).send({
             status: true,
             message: "Chat consultado con éxito",
+            data: { chat: queriedChat }
+        })
+    } catch (error) {
+        console.log("ERROR", error)
+        res.status(500).send({
+            status: false,
+            message: "Consulta falló",
+            data: { error: error.toString() }
+        })
+    }
+})
+
+
+//Consultar chats de un usuario
+router.get("/chat/user/:userNickname", authenticate, async (req, res) => {
+    try {
+        const params = req.params
+        console.log("/chat/user/:userNickname", params)
+        const queriedChat = await queryChatGroupsByNickname(
+            params.userNickname
+        )
+        res.status(200).send({
+            status: true,
+            message: "Chats consultados con éxito",
             data: { chat: queriedChat }
         })
     } catch (error) {

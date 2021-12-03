@@ -113,11 +113,24 @@ async function queryChatGroups() {
     return chatGroups
 }
 
+async function queryChatGroupsByNickname(userNickname) {
+    const chatGroups = await Chat.find({ "users.nickname": { $eq: userNickname } }).select("name").catch((error) => {
+        console.log(error)
+        throw new Error("Error al buscar chats")
+    })
+    console.log("@@@@@", chatGroups)
+    if (chatGroups == null || chatGroups.length <= 0) {
+        throw new Error("Error no se encontro ningún chat")
+    }
+    return chatGroups
+}
+
 
 module.exports = {
     createGroup,
     addGroupMember,
     deleteGroup,
     queryChatGroup,
-    queryChatGroups
+    queryChatGroups,
+    queryChatGroupsByNickname
 }
