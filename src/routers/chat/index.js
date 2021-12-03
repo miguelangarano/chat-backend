@@ -1,7 +1,13 @@
 const express = require("express")
 const { authenticate } = require("../../middleware/auth")
 const router = new express.Router()
-const { createGroup, addGroupMember, deleteGroup, queryChatGroup } = require("./utils")
+const {
+    createGroup,
+    addGroupMember,
+    deleteGroup,
+    queryChatGroup,
+    queryChatGroups
+} = require("./utils")
 
 //Crear grupo
 router.post("/chat/create-group", authenticate, async (req, res) => {
@@ -75,12 +81,34 @@ router.delete("/chat/delete-group", authenticate, async (req, res) => {
     }
 })
 
-//Consultar grupo completo
+//Consultar todos los chats
+router.get("/chat/all", authenticate, async (req, res) => {
+    try {
+        const request = req.body
+        const params = req.params
+        console.log("/chat/all", request, params)
+        const queriedChats = await queryChatGroups()
+        res.status(200).send({
+            status: true,
+            message: "Chat consultado con éxito",
+            data: { chats: queriedChats }
+        })
+    } catch (error) {
+        console.log("ERROR", error)
+        res.status(500).send({
+            status: false,
+            message: "Consulta falló",
+            data: { error: error.toString() }
+        })
+    }
+})
+
+//Consultar chat completo
 router.get("/chat/:chatName", authenticate, async (req, res) => {
     try {
         const request = req.body
         const params = req.params
-        console.log("/chat/:chatName", request)
+        console.log("/chat/:chatName", request, params)
         const queriedChat = await queryChatGroup(
             params.chatName
         )
@@ -99,7 +127,7 @@ router.get("/chat/:chatName", authenticate, async (req, res) => {
     }
 })
 
-//Consultar todos los chats
+
 
 //Enviar mensaje a grupo
 
