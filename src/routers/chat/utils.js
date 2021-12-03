@@ -85,4 +85,21 @@ async function deleteGroup(groupName, adminNickname, adminPassword) {
 }
 
 
-module.exports = { createGroup, addGroupMember, deleteGroup }
+async function queryChatGroup(chatName) {
+    const chatGroup = await Chat.findOne({ name: chatName }).catch((error) => {
+        console.log(error)
+        throw new Error("Error al buscar chat group")
+    })
+    if (chatGroup == null) {
+        throw new Error("Error no se encontro el chat group")
+    }
+    return {
+        name: chatGroup.name,
+        adminNickname: chatGroup.adminNickname,
+        users: chatGroup.users,
+        message: chatGroup.messages
+    }
+}
+
+
+module.exports = { createGroup, addGroupMember, deleteGroup, queryChatGroup }
