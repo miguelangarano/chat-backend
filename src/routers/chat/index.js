@@ -39,6 +39,7 @@ router.post("/chat/create-group", authenticate, async (req, res) => {
 router.patch("/chat/add-group-member", authenticate, async (req, res) => {
     try {
         const request = req.body
+        console.log("/chat/add-group-member", request)
         const updatedGroup = await addGroupMember(
             request.groupName,
             request.newMember
